@@ -13,6 +13,10 @@
 /.next/
 /out/
 
+# local env files
+.env
+.env*.local
+
 # production
 /build
 
@@ -34,3 +38,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.db
+*.db-journal
