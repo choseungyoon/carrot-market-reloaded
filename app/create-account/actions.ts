@@ -1,13 +1,9 @@
 "use server"
+import { PASSW0RD_MIN_LENGTH, PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
 import {z} from "zod"
 
-// At least one uppercase letter, one lowercase letter, one number and one special character
-const passwordRegex = new RegExp(
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/
-    );
-
-const checkUsername = (username : string) => !username.includes("potato");
 const checkPassword = ({password,confirmPassword}:{password:string, confirmPassword:string}) => password === confirmPassword
+
 const formSchema = z.object({
     username: z
     .string({
@@ -16,11 +12,10 @@ const formSchema = z.object({
     })
     .trim()
     .toLowerCase()
-    .min(3,"Way too short!!")
-    .max(10,"That is too long!!")
-    .refine(checkUsername, "custom error"),
+    .min(PASSW0RD_MIN_LENGTH,"Way too short!!")
+    .max(10,"That is too long!!"),
     email : z.string().email().toLowerCase(),
-    password: z.string().min(10).regex(passwordRegex,"A password must have lowercase, UPPERCASE, a number and special characters"),
+    password: z.string().min(10).regex(PASSWORD_REGEX,PASSWORD_REGEX_ERROR),
     confirmPassword : z.string().min(10),
 }).refine(checkPassword, {
     message : "Both passwords should be the same!",
@@ -43,5 +38,4 @@ export async function createAccount(prevStage: any, FormData: FormData){
     else{
         console.log(data)
     }
-
 }
